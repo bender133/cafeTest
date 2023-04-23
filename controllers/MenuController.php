@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
-class MenuController extends \yii\rest\ActiveController {
+use yii\rest\ActiveController;
+
+class MenuController extends ActiveController {
 
   public $modelClass = 'app\models\Menu';
 

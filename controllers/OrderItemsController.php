@@ -4,29 +4,27 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
-use app\forms\OrderItemsForm;
 use app\models\Menu;
 use app\models\OrderItems;
+use yii\rest\Controller;
 use yii\web\BadRequestHttpException;
 
-class OrderItemsController extends \yii\rest\ActiveController {
-
-  public $modelClass = 'app\models\OrderItems';
+class OrderItemsController extends Controller {
 
   /**
    * @throws \yii\base\Exception
    */
   public function actionPost() {
 
-    $itemsForm = new OrderItemsForm();
-    $itemsForm->load(['OrderItemsForm' => \Yii::$app->request->post()]);
+    $orderItems = new OrderItems();
+    $orderItems->load(\Yii::$app->request->post(), '');
 
-    if (!$itemsForm->validate()) {
+    if (!$orderItems->validate()) {
       throw new BadRequestHttpException('Invalid request parameters');
     }
 
-    $orderItems = new OrderItems();
-    $menu = Menu::findOne($itemsForm->menu_id);
+
+    $menu = Menu::findOne($orderItems->menu_id);
     $transaction = Menu::getDb()->beginTransaction();
 
     if ($menu === null) {
@@ -34,11 +32,13 @@ class OrderItemsController extends \yii\rest\ActiveController {
     }
 
     try {
-      if (!$menu->hasEnoughQuantity($itemsForm->quantity)) {
+      if (!$menu->hasEnoughQuantity($orderItems->quantity)) {
         throw new \yii\base\Exception('An insufficient amount');
       }
 
-      if (!$orderItems->addOrderItems($itemsForm->attributes) || !$menu->decreaseQuantity((int) $itemsForm->quantity)) {
+      $menu->decreaseQuantity((int) $orderItems->quantity);
+
+      if (!$orderItems->save($orderItems->attributes) || !$menu->save()) {
         throw new \yii\base\Exception('Invalid data');
       }
 

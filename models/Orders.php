@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace app\models;
 
+use yii\db\ActiveQueryInterface;
+use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table "orders".
  *
@@ -16,7 +19,7 @@ namespace app\models;
  *
  * @property OrderItems[] $orderItems
  */
-class Orders extends \yii\db\ActiveRecord {
+class Orders extends ActiveRecord {
 
   public const CREATED = 0;
 
@@ -27,14 +30,14 @@ class Orders extends \yii\db\ActiveRecord {
   /**
    * {@inheritdoc}
    */
-  public static function tableName() {
+  public static function tableName(): string {
     return 'orders';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function rules() {
+  public function rules(): array {
     return [
       [['name', 'user'], 'required'],
       [['status'], 'integer'],
@@ -46,7 +49,7 @@ class Orders extends \yii\db\ActiveRecord {
   /**
    * {@inheritdoc}
    */
-  public function attributeLabels() {
+  public function attributeLabels(): array {
     return [
       'id' => 'ID',
       'name' => 'Name',
@@ -57,18 +60,8 @@ class Orders extends \yii\db\ActiveRecord {
     ];
   }
 
-  public function getOrderItems() {
+  public function getOrderItems(): ActiveQueryInterface {
     return $this->hasMany(OrderItems::class, ['order_id' => 'id']);
-  }
-
-  public function confirmOrder(int $orderId) {
-    $order = self::findOne($orderId);
-    if ($order !== null) {
-      $order->status = self::CONFIRMED;
-      return $order->save();
-    }
-
-    throw new \yii\web\NotFoundHttpException('Order not found');
   }
 
 }

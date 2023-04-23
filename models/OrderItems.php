@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace app\models;
 
+use yii\db\ActiveQueryInterface;
+use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table "order_items".
  *
@@ -17,19 +20,19 @@ namespace app\models;
  * @property Menu $menu
  * @property Orders $order
  */
-class OrderItems extends \yii\db\ActiveRecord {
+class OrderItems extends ActiveRecord {
 
   /**
    * {@inheritdoc}
    */
-  public static function tableName() {
+  public static function tableName(): string {
     return 'order_items';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function rules() {
+  public function rules(): array {
     return [
       [['order_id', 'menu_id', 'quantity'], 'required'],
       [['order_id', 'menu_id', 'quantity'], 'integer'],
@@ -54,7 +57,7 @@ class OrderItems extends \yii\db\ActiveRecord {
   /**
    * {@inheritdoc}
    */
-  public function attributeLabels() {
+  public function attributeLabels(): array {
     return [
       'id' => 'ID',
       'order_id' => 'Order ID',
@@ -65,19 +68,12 @@ class OrderItems extends \yii\db\ActiveRecord {
     ];
   }
 
-  public function getMenu() {
+  public function getMenu(): ActiveQueryInterface {
     return $this->hasOne(Menu::class, ['id' => 'menu_id']);
   }
 
-  public function getOrder() {
+  public function getOrder(): ActiveQueryInterface {
     return $this->hasOne(Orders::class, ['id' => 'order_id']);
-  }
-
-  public function addOrderItems(array $params): bool {
-    $this->menu_id = $params['menu_id'];
-    $this->order_id = $params['order_id'];
-    $this->quantity = $params['quantity'];
-    return $this->save();
   }
 
 }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
-class OrdersController extends \yii\rest\ActiveController {
+use yii\rest\ActiveController;
+
+class OrdersController extends ActiveController {
 
   public $modelClass = 'app\models\Orders';
 

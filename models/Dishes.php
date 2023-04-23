@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace app\models;
 
+use yii\db\ActiveQueryInterface;
+use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table "dishes".
  *
@@ -15,21 +18,22 @@ namespace app\models;
  * @property Chefs $chefs
  * @property Menu[] $menu
  */
-class Dishes extends \yii\db\ActiveRecord {
+class Dishes extends ActiveRecord {
 
   /**
    * {@inheritdoc}
    */
-  public static function tableName() {
+  public static function tableName(): string {
     return 'dishes';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function rules() {
+  public function rules(): array {
     return [
       [['chef_id', 'active'], 'integer'],
+      [['chef_id', 'name'], 'required'],
       [['name'], 'string', 'max' => 32],
       [['name'], 'unique'],
       [
@@ -45,7 +49,7 @@ class Dishes extends \yii\db\ActiveRecord {
   /**
    * {@inheritdoc}
    */
-  public function attributeLabels() {
+  public function attributeLabels(): array {
     return [
       'id' => 'ID',
       'chef_id' => 'Chef ID',
@@ -54,11 +58,11 @@ class Dishes extends \yii\db\ActiveRecord {
     ];
   }
 
-  public function getChefs() {
+  public function getChefs(): ActiveQueryInterface {
     return $this->hasOne(Chefs::class, ['id' => 'chef_id']);
   }
 
-  public function getMenu() {
+  public function getMenu(): ActiveQueryInterface {
     return $this->hasMany(Menu::class, ['dishes_id' => 'id']);
   }
 

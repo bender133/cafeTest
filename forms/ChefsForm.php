@@ -8,17 +8,18 @@ use yii\base\Model;
 
 class ChefsForm extends Model {
 
-  public $start;
+  public string $start;
 
-  public $end;
+  public string $end;
 
-  public $limit;
+  public int $limit = 5;
 
-  public function rules() {
+  public function rules(): array {
     return [
       [['start', 'end'], 'required'],
       [['start', 'end'], 'date', 'format' => 'php:Y-m-d'],
       [['limit'], 'integer'],
+      [['limit'], 'integer', 'max' => 100],
       [
         ['end'],
         'compare',

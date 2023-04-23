@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace app\models;
 
+use yii\db\ActiveQueryInterface;
+use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table "menu".
  *
@@ -16,21 +19,22 @@ namespace app\models;
  * @property Dishes $dishes
  * @property OrderItems[] $orderItems
  */
-class Menu extends \yii\db\ActiveRecord {
+class Menu extends ActiveRecord {
 
   /**
    * {@inheritdoc}
    */
-  public static function tableName() {
+  public static function tableName(): string {
     return 'menu';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function rules() {
+  public function rules(): array {
     return [
       [['chef_id', 'dishes_id', 'quantity'], 'integer'],
+      [['chef_id', 'dishes_id'], 'required'],
       [
         ['dishes_id'],
         'exist',
@@ -51,7 +55,7 @@ class Menu extends \yii\db\ActiveRecord {
   /**
    * {@inheritdoc}
    */
-  public function attributeLabels() {
+  public function attributeLabels(): array {
     return [
       'id' => 'ID',
       'chef_id' => 'Chef ID',
@@ -60,25 +64,23 @@ class Menu extends \yii\db\ActiveRecord {
     ];
   }
 
-  public function getChef() {
+  public function getChef(): ActiveQueryInterface {
     return $this->hasOne(Chefs::class, ['id' => 'chef_id']);
   }
 
-  public function getDishes() {
+  public function getDishes(): ActiveQueryInterface {
     return $this->hasOne(Dishes::class, ['id' => 'dishes_id']);
   }
 
-  public function getOrderItems() {
+  public function getOrderItems(): ActiveQueryInterface {
     return $this->hasMany(OrderItems::class, ['menu_id' => 'id']);
   }
 
-  public function decreaseQuantity(int $quantity): bool {
+  public function decreaseQuantity(int $quantity): void {
     $this->quantity -= $quantity;
-
-    return $this->save();
   }
 
-  public function hasEnoughQuantity($quantity): bool {
+  public function hasEnoughQuantity(int $quantity): bool {
     return $this->quantity >= $quantity;
   }
 

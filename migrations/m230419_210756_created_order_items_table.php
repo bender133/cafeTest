@@ -39,6 +39,8 @@ class m230419_210756_created_order_items_table extends Migration {
       'id',
       'CASCADE'
     );
+
+    $this->createIndex('idx_order_items_order_id_menu_id_unique', 'order_items', ['order_id', 'menu_id'], true);
   }
 
   /**

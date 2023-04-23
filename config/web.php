@@ -50,22 +50,10 @@ $config = [
       'showScriptName' => false,
       'rules' => [
         ['class' => 'yii\rest\UrlRule', 'controller' => 'orders'],
-        [
-          'class' => 'yii\rest\UrlRule',
-          'controller' => 'chefs',
-          'patterns' => [
-            'GET chefs/popular' => 'popular',
-          ],
-        ],
-        [
-          'class' => 'yii\rest\UrlRule',
-          'controller' => 'order-items',
-          'patterns' => [
-            'POST' => 'post',
-          ],
-        ],
         ['class' => 'yii\rest\UrlRule', 'controller' => 'menu'],
         ['class' => 'yii\rest\UrlRule', 'controller' => 'dishes'],
+        'POST order-items' => 'order-items/post',
+        'GET chefs/popular' => 'chefs/popular',
       ],
     ],
   ],

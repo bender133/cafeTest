@@ -5,7 +5,9 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
-class DishesController extends \yii\rest\ActiveController {
+use yii\rest\ActiveController;
+
+class DishesController extends ActiveController {
 
   public $modelClass = 'app\models\Dishes';
 

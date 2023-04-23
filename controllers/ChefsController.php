@@ -8,12 +8,10 @@ use app\forms\ChefsForm;
 use app\models\Chefs;
 use app\models\Orders;
 use Yii;
-use yii\rest\ActiveController;
+use yii\rest\Controller;
 use yii\web\BadRequestHttpException;
 
-class ChefsController extends ActiveController {
-
-  public $modelClass = 'app\models\Chefs';
+class ChefsController extends Controller {
 
   public function actionPopular() {
     $form = new ChefsForm();
@@ -49,7 +47,7 @@ class ChefsController extends ActiveController {
       ->orderBy(['total_orders' => SORT_DESC])
       ->limit($form->limit);
 
-    return $query->all();
+    return $query->asArray()->all();
   }
 
 }
